@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>netstandard2.1</TargetFramework>
+		<OutputType>Library</OutputType>
+
+		<RootNamespace>NoP77svk.AspNetBrowserAutoLaunch</RootNamespace>
+		<AssemblyName>NoP77svk.AspNetBrowserAutoLaunch.Core</AssemblyName>
+
+		<PackageId>NoP77svk.AspNetBrowserAutoLaunch.Core</PackageId>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageIcon>asp-net-browser-auto-launch.png</PackageIcon>
+		<PackageLicenseExpression>CC-BY-SA-4.0</PackageLicenseExpression>
+		<PackageTags>...;library;netstandard</PackageTags>
+		<PackageType>Library</PackageType>
+		
+		<RepositoryType>git</RepositoryType>
+		<RepositoryUrl>https://github.com/nop77svk/dotnet.nuget.asp-net-browser-auto-launch.git</RepositoryUrl>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="$(ProjectDir)../_assets/README.md" Pack="true" PackagePath="/" />
+		<None Include="$(ProjectDir)../_assets/asp-net-browser-auto-launch.png" Pack="true" PackagePath="/" />
+		<None Include="$(ProjectDir)../_assets/LICENSE" Pack="true" PackagePath="/" />
+	</ItemGroup>
+</Project>
