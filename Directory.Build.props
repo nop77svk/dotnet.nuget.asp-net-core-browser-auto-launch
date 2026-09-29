@@ -4,9 +4,9 @@
 		<Nullable>enable</Nullable>
         <LangVersion>latest</LangVersion>
 
-		<Product>AspNetBrowserAutoLaunch</Product>
+		<Product>ASP.NET browser auto-launch helper</Product>
 		<Authors>Peter Hraško</Authors>
-		<Company>Open source community</Company>
+		<Company>Subsecond I/O, s.r.o., Slovakia</Company>
 		<Copyright>Practically copyleft</Copyright>
 		<NoWarn>1701;1702;AD0001;NETSDK1182</NoWarn>
 
