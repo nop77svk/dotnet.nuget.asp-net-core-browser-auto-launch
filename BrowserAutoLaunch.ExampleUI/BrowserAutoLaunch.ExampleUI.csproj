@@ -1,13 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
-		<IsPackable>false</IsPackable>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <BlazorDisableThrowNavigationException>true</BlazorDisableThrowNavigationException>
+        <IsPackable>false</IsPackable>
+        <RootNamespace>BrowserAutoLaunch.ExampleUI</RootNamespace>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\BrowserAutoLaunch.Core\BrowserAutoLaunch.Core.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\BrowserAutoLaunch.Core\BrowserAutoLaunch.Core.csproj" />
+    </ItemGroup>
 
 </Project>
