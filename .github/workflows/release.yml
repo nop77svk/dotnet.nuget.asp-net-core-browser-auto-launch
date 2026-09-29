@@ -24,6 +24,8 @@ jobs:
           6.0.x
     - name: Checkout
       uses: actions/checkout@v5
+      with:
+        lfs: true
     - name: Generate Changelog
       run: echo "# Good things have arrived" > ${{ github.workspace }}-CHANGELOG.txt
     - name: Set VERSION variable from tag
