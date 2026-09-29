@@ -1,4 +1,4 @@
-namespace NoP77svk.AspNetBrowserAutoLaunch;
+namespace NoP77svk.AspNetCore.BrowserAutoLaunch;
 
 using Microsoft.Extensions.Logging;
 
@@ -10,7 +10,7 @@ public static class BrowserAutoLaunchExtensions
 
         ILogger<BrowserAutoLaunchService> logger = app.Services.GetRequiredService<ILogger<BrowserAutoLaunchService>>();
 
-        BrowserAutoLaunchService autoLaunchService = app.Services.GetRequiredService<BrowserAutoLaunchService>()
+        BrowserAutoLaunchService autoLaunchService = app.Services.GetService<BrowserAutoLaunchService>()
             ?? new BrowserAutoLaunchService(app, logger)
             {
                 ThrowOnBrowserOpenError = false,
@@ -18,12 +18,5 @@ public static class BrowserAutoLaunchExtensions
             };
 
         autoLaunchService.RegisterTheBrowserAutoLaunchOnApplicationStart();
-    }
-
-    public static void AddBrowserAutoLaunchService(this IHostApplicationBuilder builder)
-    {
-        ArgumentNullException.ThrowIfNull(builder);
-
-        builder.Services.AddSingleton<BrowserAutoLaunchService>();
     }
 }

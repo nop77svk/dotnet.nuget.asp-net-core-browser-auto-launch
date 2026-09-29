@@ -1,6 +1,0 @@
-<Solution>
-  <Folder Name="/AspNetBrowserAutoLaunch.Core/">
-    <Project Path="AspNetBrowserAutoLaunch.Core/AspNetBrowserAutoLaunch.Core.csproj" />
-    <Project Path="AspNetBrowserAutoLaunch.Tests/AspNetBrowserAutoLaunch.Tests.csproj" />
-  </Folder>
-</Solution>

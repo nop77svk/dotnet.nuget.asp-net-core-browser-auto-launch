@@ -1,4 +1,4 @@
-namespace NoP77svk.AspNetBrowserAutoLaunch;
+namespace NoP77svk.AspNetCore.BrowserAutoLaunch;
 
 public class BrowserAutoLaunchException : Exception
 {

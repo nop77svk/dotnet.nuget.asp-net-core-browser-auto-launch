@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="BrowserAutoLaunch.Core/BrowserAutoLaunch.Core.csproj" />
+  <Project Path="BrowserAutoLaunch.Tests/BrowserAutoLaunch.Tests.csproj" />
+  <Project Path="BrowserAutoLaunch.ExampleUI/BrowserAutoLaunch.ExampleUI.csproj" Id="05371dcc-a4ea-40f5-8128-fd063735a6f3" />
+</Solution>

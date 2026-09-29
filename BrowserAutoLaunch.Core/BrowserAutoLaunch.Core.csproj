@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<OutputType>Library</OutputType>
+
+		<RootNamespace>NoP77svk.AspNetCore.BrowserAutoLaunch</RootNamespace>
+		<AssemblyName>NoP77svk.AspNetCore.BrowserAutoLaunch.Core</AssemblyName>
+
+		<PackageId>NoP77svk.AspNetCore.BrowserAutoLaunch</PackageId>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageIcon>asp-net-core-browser-auto-launch.png</PackageIcon>
+		<PackageLicenseExpression>CC-BY-SA-4.0</PackageLicenseExpression>
+		<PackageTags>browser;asp.net core;library</PackageTags>
+        <PackageType>Dependency</PackageType>
+        <IsPackable>true</IsPackable>
+
+        <RepositoryType>git</RepositoryType>
+		<RepositoryUrl>https://github.com/nop77svk/dotnet.nuget.asp-net-core-browser-auto-launch.git</RepositoryUrl>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="$(ProjectDir)../_assets/README.md" Pack="true" PackagePath="/" />
+		<None Include="$(ProjectDir)../_assets/asp-net-core-browser-auto-launch.png" Pack="true" PackagePath="/" />
+		<None Include="$(ProjectDir)../_assets/LICENSE" Pack="true" PackagePath="/" />
+	</ItemGroup>
+</Project>
