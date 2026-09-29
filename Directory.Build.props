@@ -29,10 +29,12 @@
 		</PackageReference>
 	</ItemGroup>
 
+<!--
 	<PropertyGroup Label="Remove Debug Symbols in Release Mode" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 		<DebugType>none</DebugType>
 		<DebugSymbols>false</DebugSymbols>
 	</PropertyGroup>
+-->
 
 	<Target Name="PostClean" AfterTargets="Clean">
 		<RemoveDir Directories="$(BaseIntermediateOutputPath)" />
