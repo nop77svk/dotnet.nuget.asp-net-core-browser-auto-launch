@@ -1,7 +1,9 @@
+namespace ExampleUI;
+
 using ExampleUI.Components;
 using NoP77svk.AspNet.BrowserAutoLaunch;
 
-internal class Program
+internal static class Program
 {
     private static void Main(string[] args)
     {
