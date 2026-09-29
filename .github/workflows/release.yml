@@ -44,7 +44,7 @@ jobs:
           --source 'https://nuget.pkg.github.com/nop77svk/index.json'
     - name: Solution clean
       run: |
-        rm -rfv */bin */obj && rm -rfv */bin */obj
+        rm -rfv */bin */obj && rm -rfv */bin */obj && rm -rfv nupkg
     - name: NuGet restore
       run: dotnet restore
     - name: Build

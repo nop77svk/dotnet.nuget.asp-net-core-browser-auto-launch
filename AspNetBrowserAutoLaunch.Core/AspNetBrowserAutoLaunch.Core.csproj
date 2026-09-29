@@ -3,10 +3,10 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<OutputType>Library</OutputType>
 
-        <RootNamespace>NoP77svk.AspNetBrowserAutoLaunch</RootNamespace>
-		<AssemblyName>NoP77svk.AspNetBrowserAutoLaunch.Core</AssemblyName>
+        <RootNamespace>NoP77svk.AspNet.BrowserAutoLaunch</RootNamespace>
+		<AssemblyName>NoP77svk.AspNet.BrowserAutoLaunch.Core</AssemblyName>
 
-		<PackageId>NoP77svk.AspNetBrowserAutoLaunch</PackageId>
+		<PackageId>NoP77svk.AspNet.BrowserAutoLaunch</PackageId>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageIcon>asp-net-browser-auto-launch.png</PackageIcon>
 		<PackageLicenseExpression>CC-BY-SA-4.0</PackageLicenseExpression>
