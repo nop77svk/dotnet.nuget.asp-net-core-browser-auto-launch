@@ -10,7 +10,7 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageIcon>asp-net-browser-auto-launch.png</PackageIcon>
 		<PackageLicenseExpression>CC-BY-SA-4.0</PackageLicenseExpression>
-		<PackageTags>...;library;netstandard</PackageTags>
+		<PackageTags>browser;asp.net core;library</PackageTags>
 		<PackageType>Library</PackageType>
 		
 		<RepositoryType>git</RepositoryType>
