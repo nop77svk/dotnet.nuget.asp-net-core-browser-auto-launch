@@ -1,1 +1,66 @@
-﻿<svg/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2b0010"/>
+      <stop offset="100%" stop-color="#d00032"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect x="0" y="0" width="128" height="128" rx="26" ry="26" fill="url(#bgGrad)"/>
+  
+  <!-- 
+    Main motif: width = height = 85% of 128 = 108.8
+    offset = 9.6 on each side
+    Coordinates inside group: 0 to 108.8
+  -->
+  <g transform="translate(9.6, 9.6)">
+    
+    <!-- Browser window - almost full width of motif -->
+    <rect x="4" y="4" width="100.8" height="38" rx="5" ry="5" 
+          fill="none" stroke="#7FFFD4" stroke-width="2.6"/>
+    <!-- Chrome bar -->
+    <line x1="4" y1="15" x2="104.8" y2="15" stroke="#7FFFD4" stroke-width="2"/>
+    <!-- Control dots -->
+    <circle cx="14" cy="9.5" r="2.4" fill="#7FFFD4"/>
+    <circle cx="24" cy="9.5" r="2.4" fill="#7FFFD4" opacity="0.7"/>
+    <circle cx="34" cy="9.5" r="2.4" fill="#7FFFD4" opacity="0.45"/>
+    
+    <!-- Rocket body - centered, tall -->
+    <path d="M40 26 
+             L68.8 26 
+             L76 74 
+             L54.4 68 
+             L32.8 74 
+             L40 26 Z" 
+          fill="url(#rocketGrad)" stroke="#E0FFFF" stroke-width="2"/>
+    
+    <!-- Nose cone -->
+    <path d="M40 26 L54.4 4 L68.8 26 Z" 
+          fill="#F0FFFF" stroke="#40E0D0" stroke-width="2"/>
+    
+    <!-- Viewport (browser metaphor) -->
+    <circle cx="54.4" cy="42" r="9.5" fill="#3D0A0A" stroke="#F0FFFF" stroke-width="2.2"/>
+    <circle cx="54.4" cy="42" r="4.8" fill="#7FFFD4"/>
+    
+    <!-- Left fin - extends near edge -->
+    <path d="M32.8 62 L8 98 L32.8 74 Z" 
+          fill="#40E0D0" stroke="#E0FFFF" stroke-width="1.8"/>
+    
+    <!-- Right fin -->
+    <path d="M76 62 L100.8 98 L76 74 Z" 
+          fill="#40E0D0" stroke="#E0FFFF" stroke-width="1.8"/>
+    
+    <!-- Flame - reaches near bottom -->
+    <path d="M38 74 
+             L54.4 106.5 
+             L70.8 74 Z" 
+          fill="url(#flameGrad)" stroke="#FFD700" stroke-width="1.5"/>
+    
+    <!-- Flame core -->
+    <path d="M46 80 
+             L54.4 100 
+             L62.8 80 Z" 
+          fill="#FFFAF0" opacity="0.92"/>
+  </g>
+</svg>
