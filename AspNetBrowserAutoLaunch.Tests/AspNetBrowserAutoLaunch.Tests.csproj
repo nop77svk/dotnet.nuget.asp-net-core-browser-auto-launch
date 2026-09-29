@@ -5,8 +5,8 @@
 		<OutputType>Library</OutputType>
 		<IsPackable>false</IsPackable>
 
-		<RootNamespace>NoP77svk.AspNetBrowserAutoLaunch.Tests</RootNamespace>
-		<AssemblyName>NoP77svk.AspNetBrowserAutoLaunch.Tests</AssemblyName>
+		<RootNamespace>NoP77svk.AspNet.BrowserAutoLaunch.Tests</RootNamespace>
+		<AssemblyName>NoP77svk.AspNet.BrowserAutoLaunch.Tests</AssemblyName>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 	</PropertyGroup>
 
