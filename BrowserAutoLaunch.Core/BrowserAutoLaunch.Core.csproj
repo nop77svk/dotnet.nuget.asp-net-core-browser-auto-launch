@@ -18,10 +18,6 @@
 		<RepositoryUrl>https://github.com/nop77svk/dotnet.nuget.asp-net-core-browser-auto-launch.git</RepositoryUrl>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)' == 'Release'">
-		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-	</PropertyGroup>
-
 	<ItemGroup>
 		<None Include="$(ProjectDir)../_assets/README.md" Pack="true" PackagePath="/" />
 		<None Include="$(ProjectDir)../_assets/asp-net-core-browser-auto-launch.png" Pack="true" PackagePath="/" />
