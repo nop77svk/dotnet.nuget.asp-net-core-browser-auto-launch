@@ -2,5 +2,6 @@
   <Folder Name="/AspNetBrowserAutoLaunch.Core/">
     <Project Path="AspNetBrowserAutoLaunch.Core/AspNetBrowserAutoLaunch.Core.csproj" />
     <Project Path="AspNetBrowserAutoLaunch.Tests/AspNetBrowserAutoLaunch.Tests.csproj" />
+    <Project Path="ExampleUI/ExampleUI.csproj" Id="05371dcc-a4ea-40f5-8128-fd063735a6f3" />
   </Folder>
 </Solution>
