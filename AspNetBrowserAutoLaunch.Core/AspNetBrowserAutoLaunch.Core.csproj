@@ -6,12 +6,13 @@
         <RootNamespace>NoP77svk.AspNetBrowserAutoLaunch</RootNamespace>
 		<AssemblyName>NoP77svk.AspNetBrowserAutoLaunch.Core</AssemblyName>
 
-		<PackageId>NoP77svk.AspNetBrowserAutoLaunch.Core</PackageId>
+		<PackageId>NoP77svk.AspNetBrowserAutoLaunch</PackageId>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageIcon>asp-net-browser-auto-launch.png</PackageIcon>
 		<PackageLicenseExpression>CC-BY-SA-4.0</PackageLicenseExpression>
 		<PackageTags>browser;asp.net core;library</PackageTags>
 		<PackageType>Library</PackageType>
+		<IsPackable>true</IsPackable>
 		
 		<RepositoryType>git</RepositoryType>
 		<RepositoryUrl>https://github.com/nop77svk/dotnet.nuget.asp-net-browser-auto-launch.git</RepositoryUrl>
