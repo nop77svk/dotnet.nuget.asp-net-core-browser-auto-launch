@@ -5,8 +5,8 @@
 		<OutputType>Library</OutputType>
 		<IsPackable>false</IsPackable>
 
-		<RootNamespace>NoP77svk.AspNet.BrowserAutoLaunch.Tests</RootNamespace>
-		<AssemblyName>NoP77svk.AspNet.BrowserAutoLaunch.Tests</AssemblyName>
+		<RootNamespace>NoP77svk.AspNetCore.BrowserAutoLaunch.Tests</RootNamespace>
+		<AssemblyName>NoP77svk.AspNetCore.BrowserAutoLaunch.Tests</AssemblyName>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 	</PropertyGroup>
 
@@ -21,7 +21,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\AspNetBrowserAutoLaunch.Core\AspNetBrowserAutoLaunch.Core.csproj" />
+		<ProjectReference Include="..\BrowserAutoLaunch.Core\BrowserAutoLaunch.Core.csproj" />
 	</ItemGroup>
 
 </Project>

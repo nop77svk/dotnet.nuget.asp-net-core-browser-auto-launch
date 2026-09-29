@@ -1,4 +1,4 @@
-namespace NoP77svk.AspNet.BrowserAutoLaunch;
+namespace NoP77svk.AspNetCore.BrowserAutoLaunch;
 
 using Microsoft.Extensions.Logging;
 

@@ -1,5 +1,5 @@
 #pragma warning disable SA1313
-namespace NoP77svk.AspNet.BrowserAutoLaunch;
+namespace NoP77svk.AspNetCore.BrowserAutoLaunch;
 
 using System.Diagnostics;
 using Microsoft.AspNetCore.Hosting.Server;

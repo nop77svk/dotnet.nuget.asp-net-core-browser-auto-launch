@@ -4,7 +4,7 @@
 		<Nullable>enable</Nullable>
         <LangVersion>latest</LangVersion>
 
-		<Product>ASP.NET browser auto-launch helper</Product>
+		<Product>ASP.NET Core browser auto-launch helper</Product>
 		<Authors>Peter Hraško</Authors>
 		<Company>Subsecond I/O, s.r.o., Slovakia</Company>
 		<Copyright>Practically copyleft</Copyright>

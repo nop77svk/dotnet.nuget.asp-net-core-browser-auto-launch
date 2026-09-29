@@ -1,7 +1,7 @@
-namespace ExampleUI;
+namespace BrowserAutoLaunch.ExampleUI;
 
-using ExampleUI.Components;
-using NoP77svk.AspNet.BrowserAutoLaunch;
+using BrowserAutoLaunch.ExampleUI.Components;
+using NoP77svk.AspNetCore.BrowserAutoLaunch;
 
 internal static class Program
 {
