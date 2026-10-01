@@ -1,7 +1,6 @@
 #pragma warning disable SA1313
 namespace NoP77svk.AspNetCore.BrowserAutoLaunch;
 
-using System.Diagnostics;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 
@@ -9,11 +8,21 @@ public sealed class BrowserAutoLaunchService
 {
     private readonly WebApplication _application;
     private readonly ILogger<BrowserAutoLaunchService>? _logger;
+    private readonly IBrowserLauncher _browserLauncher;
 
     public BrowserAutoLaunchService(WebApplication application, ILogger<BrowserAutoLaunchService>? logger = null)
+        : this(application, logger, new SystemBrowserLauncher())
+    {
+    }
+
+    internal BrowserAutoLaunchService(
+        WebApplication application,
+        ILogger<BrowserAutoLaunchService>? logger,
+        IBrowserLauncher browserLauncher)
     {
         _application = application;
         _logger = logger ?? application.Services.GetRequiredService<ILogger<BrowserAutoLaunchService>>();
+        _browserLauncher = browserLauncher;
     }
 
     public bool ThrowOnNoServerUriDetected { get; set; } = false;
@@ -25,61 +34,7 @@ public sealed class BrowserAutoLaunchService
         lifetime.ApplicationStarted.Register(LaunchTheBrowserFromApplication);
     }
 
-    private static void OpenBrowser(string url)
-    {
-        ProcessStartInfo customProcessStartInfo;
-
-        if (OperatingSystem.IsWindows())
-        {
-            customProcessStartInfo = new ProcessStartInfo(url)
-            {
-                UseShellExecute = true
-            };
-        }
-        else if (OperatingSystem.IsLinux())
-        {
-            var xdgOpenPath = FindOnPath("xdg-open") ?? "/usr/bin/xdg-open";
-            customProcessStartInfo = new ProcessStartInfo()
-            {
-                FileName = xdgOpenPath,
-                Arguments = url,
-                UseShellExecute = false
-            };
-        }
-        else if (OperatingSystem.IsMacOS())
-        {
-            var openPath = FindOnPath("open") ?? "/usr/bin/open";
-            customProcessStartInfo = new ProcessStartInfo()
-            {
-                FileName = openPath,
-                Arguments = url,
-                UseShellExecute = false
-            };
-        }
-        else
-        {
-            throw new PlatformNotSupportedException($"Don't know how to open a web browser on {Environment.OSVersion}");
-        }
-
-        Process.Start(customProcessStartInfo);
-    }
-
-    private static string? FindOnPath(string exeName)
-    {
-        var pathVar = Environment.GetEnvironmentVariable("PATH");
-        if (string.IsNullOrEmpty(pathVar))
-        {
-            return null;
-        }
-
-        string? result = pathVar.Split(Path.PathSeparator)
-            .Select(dir => Path.Combine(dir, exeName))
-            .FirstOrDefault(File.Exists);
-
-        return result;
-    }
-
-    private void LaunchTheBrowserFromApplication()
+    internal void LaunchTheBrowserFromApplication()
     {
         ILogger logger = _logger ?? _application.Logger;
 
@@ -110,7 +65,7 @@ public sealed class BrowserAutoLaunchService
 
         try
         {
-            OpenBrowser(url);
+            _browserLauncher.Open(url);
         }
         catch (Exception ex)
         {

@@ -1,0 +1,34 @@
+namespace NoP77svk.AspNetCore.BrowserAutoLaunch.Tests;
+
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging.Abstractions;
+using Xunit;
+
+public sealed class BrowserAutoLaunchBrowserSmokeTests
+{
+    [BrowserSmokeFact]
+    [Trait("Category", "BrowserSmoke")]
+    public async Task UseBrowserAutoLaunch_RequestsTheDefaultBrowser()
+    {
+        var builder = WebApplication.CreateBuilder();
+        builder.WebHost.UseUrls("http://127.0.0.1:0");
+
+        BrowserAutoLaunchService? service = null;
+        builder.Services.AddSingleton(_ => service!);
+
+        await using var app = builder.Build();
+        service = new BrowserAutoLaunchService(app, NullLogger<BrowserAutoLaunchService>.Instance, new SystemBrowserLauncher())
+        {
+            ThrowOnBrowserOpenError = true,
+            ThrowOnNoServerUriDetected = true
+        };
+
+        app.MapGet("/", () => "browser-smoke-ok");
+        app.UseBrowserAutoLaunch();
+        await app.StartAsync();
+
+        Assert.True(app.Lifetime.ApplicationStarted.IsCancellationRequested);
+    }
+}
