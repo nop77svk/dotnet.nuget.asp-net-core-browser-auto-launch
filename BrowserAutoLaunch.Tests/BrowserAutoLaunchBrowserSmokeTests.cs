@@ -13,7 +13,7 @@ public sealed class BrowserAutoLaunchBrowserSmokeTests
     {
         // Arrange
         var builder = WebApplication.CreateBuilder();
-        builder.WebHost.UseUrls("http://127.0.0.1:0"); // Use a random available port"
+        builder.WebHost.UseUrls("http://127.0.0.1:0"); // Use a random available port
 
         await using var app = builder.Build();
 
@@ -23,8 +23,9 @@ public sealed class BrowserAutoLaunchBrowserSmokeTests
             ThrowOnNoServerUriDetected = true
         };
 
+        service.RegisterOnApplicationStart(app);
+
         app.MapGet("/", () => "browser-smoke-ok");
-        app.UseBrowserAutoLaunch(service);
 
         // Act
         using CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));

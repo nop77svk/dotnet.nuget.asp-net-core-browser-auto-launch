@@ -4,14 +4,6 @@ using Microsoft.Extensions.Logging;
 
 public static class BrowserAutoLaunchExtensions
 {
-    public static void UseBrowserAutoLaunch(this WebApplication app, BrowserAutoLaunchService autoLaunchService)
-    {
-        ArgumentNullException.ThrowIfNull(app);
-        ArgumentNullException.ThrowIfNull(autoLaunchService);
-
-        autoLaunchService.RegisterOnApplicationStart(app);
-    }
-
     public static void UseBrowserAutoLaunch(this WebApplication app)
     {
         ArgumentNullException.ThrowIfNull(app);
@@ -25,6 +17,6 @@ public static class BrowserAutoLaunchExtensions
                 ThrowOnNoServerUriDetected = false
             };
 
-        app.UseBrowserAutoLaunch(autoLaunchService);
+        autoLaunchService.RegisterOnApplicationStart(app);
     }
 }
