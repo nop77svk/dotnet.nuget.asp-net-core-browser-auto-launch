@@ -95,13 +95,17 @@ internal sealed class SystemBrowserLauncher : IBrowserLauncher
             .FirstOrDefault(fileExists);
     }
 
-    internal static string? FindOnPath(string exeName) => FindOnPath(
-        exeName,
-        Environment.GetEnvironmentVariable("PATH"),
-        File.Exists);
+    internal static string? FindOnPath(string exeName)
+        => FindOnPath(
+            exeName: exeName,
+            pathVar: Environment.GetEnvironmentVariable("PATH"),
+            fileExists: File.Exists
+        );
 
-    internal static BrowserPlatform GetCurrentPlatform() => DeterminePlatform(
-        OperatingSystem.IsWindows(),
-        OperatingSystem.IsLinux(),
-        OperatingSystem.IsMacOS());
+    internal static BrowserPlatform GetCurrentPlatform()
+        => DeterminePlatform(
+            isWindows: OperatingSystem.IsWindows(),
+            isLinux: OperatingSystem.IsLinux(),
+            isMacOS: OperatingSystem.IsMacOS()
+        );
 }
