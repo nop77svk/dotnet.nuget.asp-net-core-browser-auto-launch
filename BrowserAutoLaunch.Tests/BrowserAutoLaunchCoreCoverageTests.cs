@@ -20,10 +20,10 @@ public sealed class BrowserAutoLaunchCoreCoverageTests
     }
 
     [Fact]
-    public async Task BrowserAutoLaunchService_ResolvesLoggerWhenConstructorLoggerIsNull()
+    public void BrowserAutoLaunchService_ResolvesLoggerWhenConstructorLoggerIsNull()
     {
         // Arrange
-        await using var app = WebApplication.CreateBuilder().Build();
+        using var app = WebApplication.CreateBuilder().Build();
         var launcher = new RecordingBrowserLauncher();
         var service = new BrowserAutoLaunchService(app, null, launcher);
 

@@ -48,7 +48,7 @@ public sealed class BrowserAutoLaunchUnitTests
     }
 
     [Fact]
-    public async Task RegisterTheBrowserAutoLaunchOnApplicationStart_InvokesLauncherWhenStarted()
+    public async Task RegisterOnApplicationStart_InvokesLauncherWhenStarted()
     {
         // Arrange
         using var server = new FakeServer("http://localhost:5000");
