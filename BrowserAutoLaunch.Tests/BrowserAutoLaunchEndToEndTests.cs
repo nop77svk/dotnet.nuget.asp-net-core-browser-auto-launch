@@ -14,6 +14,7 @@ public sealed class BrowserAutoLaunchEndToEndTests
     [Fact]
     public async Task UseBrowserAutoLaunch_DoesNotThrowWhenStartupHasNoServerAddress()
     {
+        // Arrange
         using var server = new AddresslessServer();
         var builder = WebApplication.CreateBuilder();
         builder.Services.AddSingleton<IServer>(server);
@@ -21,14 +22,17 @@ public sealed class BrowserAutoLaunchEndToEndTests
         await using var app = builder.Build();
         app.UseBrowserAutoLaunch();
 
-        await app.StartAsync();
+        // Act
+        await app.StartAsync(TestContext.Current.CancellationToken);
 
+        // Assert
         Assert.True(app.Lifetime.ApplicationStarted.IsCancellationRequested);
     }
 
     [Fact]
     public async Task UseBrowserAutoLaunch_UsesBoundKestrelAddressAfterStartup()
     {
+        // Arrange
         var builder = WebApplication.CreateBuilder();
         builder.WebHost.UseUrls("http://127.0.0.1:0");
         var launcher = new RecordingBrowserLauncher();
@@ -41,16 +45,23 @@ public sealed class BrowserAutoLaunchEndToEndTests
         app.MapGet("/", () => "e2e-ok");
         app.UseBrowserAutoLaunch();
 
+        // Assert
         Assert.Empty(launcher.OpenedUrls);
 
-        await app.StartAsync();
+        // Act
+        await app.StartAsync(TestContext.Current.CancellationToken);
 
+        // Assert
         var server = app.Services.GetRequiredService<IServer>();
         var address = Assert.Single(server.Features.Get<IServerAddressesFeature>()!.Addresses);
         Assert.Equal(new[] { address }, launcher.OpenedUrls, StringComparer.Ordinal);
 
+        // Act
         using var client = new HttpClient { BaseAddress = new Uri(address) };
-        Assert.Equal("e2e-ok", await client.GetStringAsync("/"));
+        string response = await client.GetStringAsync("/", TestContext.Current.CancellationToken);
+
+        // Assert
+        Assert.Equal("e2e-ok", response);
     }
 
     private sealed class RecordingBrowserLauncher : IBrowserLauncher

@@ -12,6 +12,7 @@ public sealed class BrowserAutoLaunchBrowserSmokeTests
     [Trait("Category", "BrowserSmoke")]
     public async Task UseBrowserAutoLaunch_RequestsTheDefaultBrowser()
     {
+        // Arrange
         var builder = WebApplication.CreateBuilder();
         builder.WebHost.UseUrls("http://127.0.0.1:0");
 
@@ -27,8 +28,11 @@ public sealed class BrowserAutoLaunchBrowserSmokeTests
 
         app.MapGet("/", () => "browser-smoke-ok");
         app.UseBrowserAutoLaunch();
-        await app.StartAsync();
 
+        // Act
+        await app.StartAsync(TestContext.Current.CancellationToken);
+
+        // Assert
         Assert.True(app.Lifetime.ApplicationStarted.IsCancellationRequested);
     }
 }

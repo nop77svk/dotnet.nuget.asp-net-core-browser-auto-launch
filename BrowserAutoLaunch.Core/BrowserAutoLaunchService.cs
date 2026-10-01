@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Hosting.Server.Features;
 public sealed class BrowserAutoLaunchService
 {
     private readonly WebApplication _application;
-    private readonly ILogger<BrowserAutoLaunchService>? _logger;
+    private readonly ILogger<BrowserAutoLaunchService> _logger;
     private readonly IBrowserLauncher _browserLauncher;
 
     public BrowserAutoLaunchService(WebApplication application, ILogger<BrowserAutoLaunchService>? logger = null)
@@ -36,12 +36,10 @@ public sealed class BrowserAutoLaunchService
 
     internal void LaunchTheBrowserFromApplication()
     {
-        ILogger logger = _logger ?? _application.Logger;
-
         var server = _application.Services.GetRequiredService<IServer>();
         var serverAddressesFeature = server.Features.Get<IServerAddressesFeature>();
 
-        string? firstAppUrl = serverAddressesFeature?.Addresses?.FirstOrDefault();
+        string? firstAppUrl = serverAddressesFeature?.Addresses.FirstOrDefault();
         if (string.IsNullOrEmpty(firstAppUrl))
         {
             if (ThrowOnNoServerUriDetected)
@@ -50,19 +48,17 @@ public sealed class BrowserAutoLaunchService
             }
             else
             {
-                logger.LogWarning("Cannot determine server URL");
+                _logger.LogWarning("Cannot determine server URL");
                 return;
             }
         }
 
-        logger.LogInformation("Spawning the web browser with URL {FirstAppUrl}", firstAppUrl);
+        _logger.LogInformation("Spawning the web browser with URL {FirstAppUrl}", firstAppUrl);
         OpenBrowserAndHandleErrors(firstAppUrl);
     }
 
     private void OpenBrowserAndHandleErrors(string url)
     {
-        ILogger logger = _logger ?? _application.Logger;
-
         try
         {
             _browserLauncher.Open(url);
@@ -75,7 +71,7 @@ public sealed class BrowserAutoLaunchService
             }
             else
             {
-                logger.LogError(ex, "Failed to spawn web browser on URL `{Url}`", url);
+                _logger.LogError(ex, "Failed to spawn web browser on URL `{Url}`", url);
             }
         }
     }
