@@ -28,7 +28,7 @@ public sealed class BrowserAutoLaunchService
     public bool ThrowOnNoServerUriDetected { get; set; } = false;
     public bool ThrowOnBrowserOpenError { get; set; } = false;
 
-    internal void RegisterTheBrowserAutoLaunchOnApplicationStart()
+    internal void RegisterOnApplicationStart()
     {
         IHostApplicationLifetime lifetime = _application.Services.GetRequiredService<IHostApplicationLifetime>();
         lifetime.ApplicationStarted.Register(LaunchTheBrowserFromApplication);

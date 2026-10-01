@@ -58,7 +58,7 @@ public sealed class BrowserAutoLaunchUnitTests
         var service = CreateService(app, launcher);
 
         // Act
-        service.RegisterTheBrowserAutoLaunchOnApplicationStart();
+        service.RegisterOnApplicationStart();
 
         // Assert
         Assert.Empty(launcher.OpenedUrls);
