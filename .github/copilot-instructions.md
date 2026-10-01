@@ -10,7 +10,7 @@
 ## Commit Guidelines
 - Commit each of your code-changing steps.
 - Commit message has the first line describing the "what has changed" and a few following lines describing "why it has changed."
-- Commit message starts with a bullet character: ➕ for feature additions, 🛠 for feature fixes, 🔧 fo small code fixes, 🧹 for code cleanups, 💣 for potentially code-breaking changes, 🤘 for feature done.
+- Commit message starts with a bullet character: ➕ for feature additions, 🛠 for feature fixes, 🔧 fr small code fixes, 🧹 for code cleanups, 💣 for potentially code-breaking changes, 🤘 for feature done.
 
 ## Testing Guidelines
 - Each test method contains one-line comments separating "arrange," "act," and "assert" phases, if they exist.
