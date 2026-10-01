@@ -8,13 +8,13 @@ using Xunit;
 
 public sealed class BrowserAutoLaunchBrowserSmokeTests
 {
-    [BrowserSmokeFact]
+    [Fact(Explicit = true)]
     [Trait("Category", "BrowserSmoke")]
     public async Task UseBrowserAutoLaunch_RequestsTheDefaultBrowser()
     {
         // Arrange
         var builder = WebApplication.CreateBuilder();
-        builder.WebHost.UseUrls("http://127.0.0.1:0");
+        builder.WebHost.UseUrls("http://127.0.0.1:3277");
 
         BrowserAutoLaunchService? service = null;
         builder.Services.AddSingleton(_ => service!);
