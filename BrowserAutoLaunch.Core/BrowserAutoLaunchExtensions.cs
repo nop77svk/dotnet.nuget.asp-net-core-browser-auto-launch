@@ -17,6 +17,6 @@ public static class BrowserAutoLaunchExtensions
                 ThrowOnNoServerUriDetected = false
             };
 
-        autoLaunchService.RegisterTheBrowserAutoLaunchOnApplicationStart();
+        autoLaunchService.RegisterOnApplicationStart(app);
     }
 }

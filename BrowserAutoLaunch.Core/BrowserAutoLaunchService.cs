@@ -1,92 +1,47 @@
 #pragma warning disable SA1313
 namespace NoP77svk.AspNetCore.BrowserAutoLaunch;
 
-using System.Diagnostics;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 
 public sealed class BrowserAutoLaunchService
 {
     private readonly WebApplication _application;
-    private readonly ILogger<BrowserAutoLaunchService>? _logger;
+    private readonly ILogger<BrowserAutoLaunchService> _logger;
+    private readonly IBrowserLauncher _browserLauncher;
 
     public BrowserAutoLaunchService(WebApplication application, ILogger<BrowserAutoLaunchService>? logger = null)
+        : this(application, logger, new SystemBrowserLauncher())
+    {
+    }
+
+    internal BrowserAutoLaunchService(
+        WebApplication application,
+        ILogger<BrowserAutoLaunchService>? logger,
+        IBrowserLauncher browserLauncher)
     {
         _application = application;
         _logger = logger ?? application.Services.GetRequiredService<ILogger<BrowserAutoLaunchService>>();
+        _browserLauncher = browserLauncher;
     }
 
     public bool ThrowOnNoServerUriDetected { get; set; } = false;
     public bool ThrowOnBrowserOpenError { get; set; } = false;
 
-    internal void RegisterTheBrowserAutoLaunchOnApplicationStart()
+    internal void RegisterOnApplicationStart(WebApplication application)
     {
-        IHostApplicationLifetime lifetime = _application.Services.GetRequiredService<IHostApplicationLifetime>();
+        IHostApplicationLifetime lifetime = application.Services.GetRequiredService<IHostApplicationLifetime>();
         lifetime.ApplicationStarted.Register(LaunchTheBrowserFromApplication);
     }
 
-    private static void OpenBrowser(string url)
+    internal void RegisterOnApplicationStart() => RegisterOnApplicationStart(_application);
+
+    internal void LaunchTheBrowserFromApplication()
     {
-        ProcessStartInfo customProcessStartInfo;
-
-        if (OperatingSystem.IsWindows())
-        {
-            customProcessStartInfo = new ProcessStartInfo(url)
-            {
-                UseShellExecute = true
-            };
-        }
-        else if (OperatingSystem.IsLinux())
-        {
-            var xdgOpenPath = FindOnPath("xdg-open") ?? "/usr/bin/xdg-open";
-            customProcessStartInfo = new ProcessStartInfo()
-            {
-                FileName = xdgOpenPath,
-                Arguments = url,
-                UseShellExecute = false
-            };
-        }
-        else if (OperatingSystem.IsMacOS())
-        {
-            var openPath = FindOnPath("open") ?? "/usr/bin/open";
-            customProcessStartInfo = new ProcessStartInfo()
-            {
-                FileName = openPath,
-                Arguments = url,
-                UseShellExecute = false
-            };
-        }
-        else
-        {
-            throw new PlatformNotSupportedException($"Don't know how to open a web browser on {Environment.OSVersion}");
-        }
-
-        Process.Start(customProcessStartInfo);
-    }
-
-    private static string? FindOnPath(string exeName)
-    {
-        var pathVar = Environment.GetEnvironmentVariable("PATH");
-        if (string.IsNullOrEmpty(pathVar))
-        {
-            return null;
-        }
-
-        string? result = pathVar.Split(Path.PathSeparator)
-            .Select(dir => Path.Combine(dir, exeName))
-            .FirstOrDefault(File.Exists);
-
-        return result;
-    }
-
-    private void LaunchTheBrowserFromApplication()
-    {
-        ILogger logger = _logger ?? _application.Logger;
-
         var server = _application.Services.GetRequiredService<IServer>();
         var serverAddressesFeature = server.Features.Get<IServerAddressesFeature>();
 
-        string? firstAppUrl = serverAddressesFeature?.Addresses?.FirstOrDefault();
+        string? firstAppUrl = serverAddressesFeature?.Addresses.FirstOrDefault();
         if (string.IsNullOrEmpty(firstAppUrl))
         {
             if (ThrowOnNoServerUriDetected)
@@ -95,22 +50,20 @@ public sealed class BrowserAutoLaunchService
             }
             else
             {
-                logger.LogWarning("Cannot determine server URL");
+                _logger.LogWarning("Cannot determine server URL");
                 return;
             }
         }
 
-        logger.LogInformation("Spawning the web browser with URL {FirstAppUrl}", firstAppUrl);
+        _logger.LogInformation("Spawning the web browser with URL {FirstAppUrl}", firstAppUrl);
         OpenBrowserAndHandleErrors(firstAppUrl);
     }
 
     private void OpenBrowserAndHandleErrors(string url)
     {
-        ILogger logger = _logger ?? _application.Logger;
-
         try
         {
-            OpenBrowser(url);
+            _browserLauncher.Open(url);
         }
         catch (Exception ex)
         {
@@ -120,7 +73,7 @@ public sealed class BrowserAutoLaunchService
             }
             else
             {
-                logger.LogError(ex, "Failed to spawn web browser on URL `{Url}`", url);
+                _logger.LogError(ex, "Failed to spawn web browser on URL `{Url}`", url);
             }
         }
     }
