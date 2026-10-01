@@ -2,19 +2,6 @@ namespace NoP77svk.AspNetCore.BrowserAutoLaunch;
 
 using System.Diagnostics;
 
-internal interface IBrowserLauncher
-{
-    void Open(string url);
-}
-
-internal enum BrowserPlatform
-{
-    Windows,
-    Linux,
-    MacOS,
-    Unsupported
-}
-
 internal sealed class SystemBrowserLauncher : IBrowserLauncher
 {
     private readonly Func<BrowserPlatform> _getPlatform;
@@ -108,13 +95,13 @@ internal sealed class SystemBrowserLauncher : IBrowserLauncher
             .FirstOrDefault(fileExists);
     }
 
-    internal static BrowserPlatform GetCurrentPlatform() => DeterminePlatform(
-        OperatingSystem.IsWindows(),
-        OperatingSystem.IsLinux(),
-        OperatingSystem.IsMacOS());
-
     internal static string? FindOnPath(string exeName) => FindOnPath(
         exeName,
         Environment.GetEnvironmentVariable("PATH"),
         File.Exists);
+
+    internal static BrowserPlatform GetCurrentPlatform() => DeterminePlatform(
+        OperatingSystem.IsWindows(),
+        OperatingSystem.IsLinux(),
+        OperatingSystem.IsMacOS());
 }
