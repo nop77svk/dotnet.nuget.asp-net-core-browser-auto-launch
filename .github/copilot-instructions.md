@@ -14,3 +14,8 @@
 
 ## Testing Guidelines
 - Each test method contains one-line comments separating "arrange," "act," and "assert" phases, if they exist.
+- Exempt test projects from code coverage enforcement.
+
+## CI/CI Guidelines
+- Everything in CI must be either for bash or for PowerShell Core. Use whichever results in shorter code.
+- CI steps longer than 5 lines must be moved to their own script files under .github/ci folder.
