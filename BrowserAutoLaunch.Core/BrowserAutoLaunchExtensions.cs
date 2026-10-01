@@ -9,7 +9,7 @@ public static class BrowserAutoLaunchExtensions
         ArgumentNullException.ThrowIfNull(app);
         ArgumentNullException.ThrowIfNull(autoLaunchService);
 
-        autoLaunchService.RegisterOnApplicationStart();
+        autoLaunchService.RegisterOnApplicationStart(app);
     }
 
     public static void UseBrowserAutoLaunch(this WebApplication app)

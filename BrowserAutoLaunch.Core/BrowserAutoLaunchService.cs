@@ -28,11 +28,13 @@ public sealed class BrowserAutoLaunchService
     public bool ThrowOnNoServerUriDetected { get; set; } = false;
     public bool ThrowOnBrowserOpenError { get; set; } = false;
 
-    internal void RegisterOnApplicationStart()
+    internal void RegisterOnApplicationStart(WebApplication application)
     {
-        IHostApplicationLifetime lifetime = _application.Services.GetRequiredService<IHostApplicationLifetime>();
+        IHostApplicationLifetime lifetime = application.Services.GetRequiredService<IHostApplicationLifetime>();
         lifetime.ApplicationStarted.Register(LaunchTheBrowserFromApplication);
     }
+
+    internal void RegisterOnApplicationStart() => RegisterOnApplicationStart(_application);
 
     internal void LaunchTheBrowserFromApplication()
     {
