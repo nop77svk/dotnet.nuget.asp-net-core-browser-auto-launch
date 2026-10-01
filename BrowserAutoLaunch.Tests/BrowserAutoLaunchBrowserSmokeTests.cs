@@ -1,6 +1,7 @@
 namespace NoP77svk.AspNetCore.BrowserAutoLaunch.Tests;
 
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
@@ -12,6 +13,7 @@ public sealed class BrowserAutoLaunchBrowserSmokeTests
     {
         // Arrange
         var builder = WebApplication.CreateBuilder();
+        builder.WebHost.UseUrls("http://127.0.0.1:0"); // Use a random available port"
 
         await using var app = builder.Build();
 
