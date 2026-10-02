@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
-		<TargetFramework>net10.0</TargetFramework>
+		<TargetFrameworks>net10.0;net8.0</TargetFrameworks>
 		<OutputType>Library</OutputType>
 
 		<RootNamespace>NoP77svk.AspNetCore.BrowserAutoLaunch</RootNamespace>
@@ -19,7 +19,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Include="$(ProjectDir)../_assets/README.md" Pack="true" PackagePath="/" />
+		<None Include="$(ProjectDir)../README.md" Pack="true" PackagePath="/" />
 		<None Include="$(ProjectDir)../_assets/asp-net-core-browser-auto-launch.png" Pack="true" PackagePath="/" />
 		<None Include="$(ProjectDir)../_assets/LICENSE" Pack="true" PackagePath="/" />
 	</ItemGroup>
