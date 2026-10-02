@@ -6,6 +6,7 @@ Allows you to automatically launch your Web UI (e.g., Blazor frontend) automatic
 
 Just put `using NoP77svk.AspNetCore.BrowserAutoLaunch;` and `app.UseBrowserAutoLaunch()` into your `Program.cs` and experience the wonder! :-)
 
+- 100% code covered by tests
 - Open source and free to use.
 - Available on NuGet for easy integration into your projects.
 
