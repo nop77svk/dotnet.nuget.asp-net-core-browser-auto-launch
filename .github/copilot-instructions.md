@@ -14,7 +14,7 @@
 
 ## Testing Guidelines
 - Each test method contains one-line comments separating "arrange," "act," and "assert" phases, if they exist.
-- Exempt test projects from code coverage enforcement by [ExludeFromCodeCoverage] on assembly level.
+- Exempt test projects from code coverage enforcement by [ExcludeFromCodeCoverage] on assembly level.
 - Tests must cover edge cases, too.
 
 ## CI/CI Guidelines
