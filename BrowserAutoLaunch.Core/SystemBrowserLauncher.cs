@@ -70,7 +70,7 @@ internal sealed class SystemBrowserLauncher : IBrowserLauncher
             throw new PlatformNotSupportedException($"Don't know how to open a web browser on {Environment.OSVersion}");
         }
 
-        _ = _startProcess(processStartInfo);
+        using var process = _startProcess(processStartInfo);
     }
 
     internal static BrowserPlatform DeterminePlatform(bool isWindows, bool isLinux, bool isMacOS)
