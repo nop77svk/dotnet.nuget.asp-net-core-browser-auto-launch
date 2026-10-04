@@ -49,6 +49,8 @@ jobs:
         rm -rfv */bin */obj && rm -rfv */bin */obj && rm -rfv nupkg
     - name: NuGet restore
       run: dotnet restore
+    - name: Check for vulnerabilities
+      run: dotnet list package --no-restore --vulnerable --include-transitive
     - name: Build
       run: dotnet build -c Release --no-restore -p:Version=${VERSION}
     - name: Test
