@@ -40,7 +40,7 @@ internal sealed class SystemBrowserLauncher : IBrowserLauncher
 
         if (platform == BrowserPlatform.Windows)
         {
-            processStartInfo = new ProcessStartInfo(url)
+            processStartInfo = new ProcessStartInfo(parsedUri.AbsoluteUri)
             {
                 UseShellExecute = true
             };
@@ -51,7 +51,7 @@ internal sealed class SystemBrowserLauncher : IBrowserLauncher
             processStartInfo = new ProcessStartInfo
             {
                 FileName = xdgOpenPath,
-                Arguments = url,
+                Arguments = parsedUri.AbsoluteUri,
                 UseShellExecute = false
             };
         }
@@ -61,7 +61,7 @@ internal sealed class SystemBrowserLauncher : IBrowserLauncher
             processStartInfo = new ProcessStartInfo
             {
                 FileName = openPath,
-                Arguments = url,
+                Arguments = parsedUri.AbsoluteUri,
                 UseShellExecute = false
             };
         }
