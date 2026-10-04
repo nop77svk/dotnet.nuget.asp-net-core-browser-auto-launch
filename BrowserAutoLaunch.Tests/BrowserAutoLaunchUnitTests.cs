@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Xunit;
 
@@ -129,6 +130,51 @@ public sealed class BrowserAutoLaunchUnitTests
         }
     }
 
+    [Theory]
+    [InlineData("http://user:secret@localhost:5000/app?token=abc#frag", "http://localhost:5000/app")]
+    [InlineData("http://localhost:5000", "http://localhost:5000/")]
+    [InlineData("not a url", "<invalid-url>")]
+    public void LaunchTheBrowserFromApplication_RedactsUrlInThrownException(string address, string expectedRedactedUrl)
+    {
+        // Arrange
+        using var server = new FakeServer(address);
+        var launcher = new FakeBrowserLauncher { Error = new InvalidOperationException("launcher failed") };
+
+        using var app = CreateApplication(server);
+        var service = CreateService(app, launcher);
+        service.ThrowOnBrowserOpenError = true;
+
+        // Act
+        Exception? exception = Record.Exception(service.LaunchTheBrowserFromApplication);
+
+        // Assert
+        var browserAutoLaunchException = Assert.IsType<BrowserAutoLaunchException>(exception);
+        Assert.Contains(expectedRedactedUrl, browserAutoLaunchException.Message);
+        Assert.DoesNotContain("secret", browserAutoLaunchException.Message);
+        Assert.DoesNotContain("token", browserAutoLaunchException.Message);
+    }
+
+    [Fact]
+    public void LaunchTheBrowserFromApplication_RedactsUrlInLogs()
+    {
+        // Arrange
+        using var server = new FakeServer("http://user:secret@localhost:5000/app?token=abc");
+        var launcher = new FakeBrowserLauncher { Error = new InvalidOperationException("launcher failed") };
+        var logger = new CapturingLogger();
+
+        using var app = CreateApplication(server);
+        var service = new BrowserAutoLaunchService(app, logger, launcher);
+
+        // Act
+        service.LaunchTheBrowserFromApplication();
+
+        // Assert
+        Assert.Equal(2, logger.Messages.Count);
+        Assert.All(logger.Messages, message => Assert.Contains("http://localhost:5000/app", message));
+        Assert.All(logger.Messages, message => Assert.DoesNotContain("secret", message));
+        Assert.All(logger.Messages, message => Assert.DoesNotContain("token", message));
+    }
+
     private static WebApplication CreateApplication(FakeServer server)
     {
         var builder = WebApplication.CreateBuilder();
@@ -139,6 +185,20 @@ public sealed class BrowserAutoLaunchUnitTests
     private static BrowserAutoLaunchService CreateService(WebApplication app, FakeBrowserLauncher launcher)
     {
         return new BrowserAutoLaunchService(app, NullLogger<BrowserAutoLaunchService>.Instance, launcher);
+    }
+
+    private sealed class CapturingLogger : ILogger<BrowserAutoLaunchService>
+    {
+        public List<string> Messages { get; } = [];
+
+        public IDisposable? BeginScope<TState>(TState state)
+            where TState : notnull
+            => null;
+
+        public bool IsEnabled(LogLevel logLevel) => true;
+
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
+            => Messages.Add(formatter(state, exception));
     }
 
     private sealed class FakeBrowserLauncher : IBrowserLauncher
