@@ -25,6 +25,11 @@ internal sealed class SystemBrowserLauncher : IBrowserLauncher
 
     public void Open(string url)
     {
+        if (!Uri.TryCreate(url, UriKind.Absolute, out var _))
+        {
+            throw new ArgumentException($"Invalid URL: {url}", nameof(url));
+        }
+
         ProcessStartInfo processStartInfo;
         BrowserPlatform platform = _getPlatform();
 
