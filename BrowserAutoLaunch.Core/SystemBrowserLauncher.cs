@@ -100,7 +100,8 @@ internal sealed class SystemBrowserLauncher : IBrowserLauncher
             return null;
         }
 
-        return pathVar.Split(Path.PathSeparator)
+        return pathVar.Split(Path.PathSeparator, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+            .Where(dir => Path.IsPathRooted(dir))
             .Select(dir => Path.Combine(dir, exeName))
             .FirstOrDefault(fileExists);
     }
