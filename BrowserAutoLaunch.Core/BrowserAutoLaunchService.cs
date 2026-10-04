@@ -55,8 +55,15 @@ public sealed class BrowserAutoLaunchService
             }
         }
 
-        _logger.LogInformation("Spawning the web browser with URL {FirstAppUrl}", firstAppUrl);
+        _logger.LogInformation("Spawning the web browser with URL {FirstAppUrl}", RedactUrl(firstAppUrl));
         OpenBrowserAndHandleErrors(firstAppUrl);
+    }
+
+    private static string RedactUrl(string url)
+    {
+        return Uri.TryCreate(url, UriKind.Absolute, out Uri? uri)
+            ? uri.GetComponents(UriComponents.SchemeAndServer | UriComponents.Path, UriFormat.UriEscaped)
+            : "<invalid-url>";
     }
 
     private void OpenBrowserAndHandleErrors(string url)
@@ -67,13 +74,14 @@ public sealed class BrowserAutoLaunchService
         }
         catch (Exception ex)
         {
+            string redactedUrl = RedactUrl(url);
             if (ThrowOnBrowserOpenError)
             {
-                throw new BrowserAutoLaunchException($"Failed to spawn web browser on URL `{url}`", ex);
+                throw new BrowserAutoLaunchException($"Failed to spawn web browser on URL `{redactedUrl}`", ex);
             }
             else
             {
-                _logger.LogError(ex, "Failed to spawn web browser on URL `{Url}`", url);
+                _logger.LogError(ex, "Failed to spawn web browser on URL `{Url}`", redactedUrl);
             }
         }
     }

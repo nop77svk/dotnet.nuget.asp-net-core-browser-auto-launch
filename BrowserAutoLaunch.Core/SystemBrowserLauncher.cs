@@ -25,12 +25,22 @@ internal sealed class SystemBrowserLauncher : IBrowserLauncher
 
     public void Open(string url)
     {
+        if (!Uri.TryCreate(url, UriKind.Absolute, out var parsedUri))
+        {
+            throw new ArgumentException($"Invalid URL: {url}", nameof(url));
+        }
+
+        if (parsedUri.Scheme is not "http" and not "https")
+        {
+            throw new ArgumentException($"Invalid URL scheme: {parsedUri.Scheme}. Only 'http' and 'https' are supported.", nameof(url));
+        }
+
         ProcessStartInfo processStartInfo;
         BrowserPlatform platform = _getPlatform();
 
         if (platform == BrowserPlatform.Windows)
         {
-            processStartInfo = new ProcessStartInfo(url)
+            processStartInfo = new ProcessStartInfo(parsedUri.AbsoluteUri)
             {
                 UseShellExecute = true
             };
@@ -41,7 +51,7 @@ internal sealed class SystemBrowserLauncher : IBrowserLauncher
             processStartInfo = new ProcessStartInfo
             {
                 FileName = xdgOpenPath,
-                Arguments = url,
+                Arguments = parsedUri.AbsoluteUri,
                 UseShellExecute = false
             };
         }
@@ -51,7 +61,7 @@ internal sealed class SystemBrowserLauncher : IBrowserLauncher
             processStartInfo = new ProcessStartInfo
             {
                 FileName = openPath,
-                Arguments = url,
+                Arguments = parsedUri.AbsoluteUri,
                 UseShellExecute = false
             };
         }
@@ -60,7 +70,7 @@ internal sealed class SystemBrowserLauncher : IBrowserLauncher
             throw new PlatformNotSupportedException($"Don't know how to open a web browser on {Environment.OSVersion}");
         }
 
-        _ = _startProcess(processStartInfo);
+        using var process = _startProcess(processStartInfo);
     }
 
     internal static BrowserPlatform DeterminePlatform(bool isWindows, bool isLinux, bool isMacOS)
@@ -90,7 +100,8 @@ internal sealed class SystemBrowserLauncher : IBrowserLauncher
             return null;
         }
 
-        return pathVar.Split(Path.PathSeparator)
+        return pathVar.Split(Path.PathSeparator, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+            .Where(dir => Path.IsPathRooted(dir))
             .Select(dir => Path.Combine(dir, exeName))
             .FirstOrDefault(fileExists);
     }

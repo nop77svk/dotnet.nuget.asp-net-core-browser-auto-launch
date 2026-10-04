@@ -89,9 +89,11 @@ public sealed class BrowserAutoLaunchCoreCoverageTests
     public void FindOnPath_ReturnsFirstMatchingExecutable()
     {
         // Arrange
-        string firstCandidate = Path.Combine("first", "browser");
-        string secondCandidate = Path.Combine("second", "browser");
-        string path = $"first{Path.PathSeparator}second";
+        string firstDir = Path.Combine(Path.GetTempPath(), "first");
+        string secondDir = Path.Combine(Path.GetTempPath(), "second");
+        string firstCandidate = Path.Combine(firstDir, "browser");
+        string secondCandidate = Path.Combine(secondDir, "browser");
+        string path = $"{firstDir}{Path.PathSeparator}{secondDir}";
 
         // Act
         string? result = SystemBrowserLauncher.FindOnPath(
@@ -102,6 +104,19 @@ public sealed class BrowserAutoLaunchCoreCoverageTests
         // Assert
         Assert.Equal(secondCandidate, result);
         Assert.NotEqual(firstCandidate, result, StringComparer.Ordinal);
+    }
+
+    [Fact]
+    public void FindOnPath_IgnoresRelativeAndEmptyEntries()
+    {
+        // Arrange
+        string path = $"relative{Path.PathSeparator}{Path.PathSeparator}.{Path.PathSeparator}..";
+
+        // Act
+        string? result = SystemBrowserLauncher.FindOnPath("browser", path, _ => true);
+
+        // Assert
+        Assert.Null(result);
     }
 
     [Fact]
@@ -146,7 +161,7 @@ public sealed class BrowserAutoLaunchCoreCoverageTests
         // Assert
         Assert.NotNull(capturedStartInfo);
         Assert.Equal(expectedExecutable, capturedStartInfo.FileName);
-        Assert.Equal(url, capturedStartInfo.Arguments);
+        Assert.Equal("http://localhost:5000/", capturedStartInfo.Arguments);
         Assert.False(capturedStartInfo.UseShellExecute);
     }
 
@@ -170,8 +185,58 @@ public sealed class BrowserAutoLaunchCoreCoverageTests
 
         // Assert
         Assert.NotNull(capturedStartInfo);
-        Assert.Equal(url, capturedStartInfo.FileName);
+        Assert.Equal("http://localhost:5000/", capturedStartInfo.FileName);
         Assert.True(capturedStartInfo.UseShellExecute);
+    }
+
+    [Theory]
+    [InlineData("not a url")]
+    [InlineData("")]
+    [InlineData("/relative/path")]
+    public void Open_ThrowsForInvalidUrlsWithoutStartingProcess(string url)
+    {
+        // Arrange
+        bool processStarted = false;
+        var launcher = new SystemBrowserLauncher(
+            () => BrowserPlatform.Linux,
+            _ => null,
+            _ =>
+            {
+                processStarted = true;
+                return null;
+            });
+
+        // Act
+        Exception? exception = Record.Exception(() => launcher.Open(url));
+
+        // Assert
+        Assert.IsType<ArgumentException>(exception);
+        Assert.False(processStarted);
+    }
+
+    [Theory]
+    [InlineData("file:///etc/passwd")]
+    [InlineData("ftp://localhost/file")]
+    [InlineData("calc:")]
+    public void Open_ThrowsForNonHttpSchemesWithoutStartingProcess(string url)
+    {
+        // Arrange
+        bool processStarted = false;
+        var launcher = new SystemBrowserLauncher(
+            () => BrowserPlatform.Windows,
+            _ => null,
+            _ =>
+            {
+                processStarted = true;
+                return null;
+            });
+
+        // Act
+        Exception? exception = Record.Exception(() => launcher.Open(url));
+
+        // Assert
+        Assert.IsType<ArgumentException>(exception);
+        Assert.False(processStarted);
     }
 
     [Fact]
