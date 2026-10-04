@@ -25,9 +25,14 @@ internal sealed class SystemBrowserLauncher : IBrowserLauncher
 
     public void Open(string url)
     {
-        if (!Uri.TryCreate(url, UriKind.Absolute, out var _))
+        if (!Uri.TryCreate(url, UriKind.Absolute, out var parsedUri))
         {
             throw new ArgumentException($"Invalid URL: {url}", nameof(url));
+        }
+
+        if (parsedUri.Scheme is not "http" and not "https")
+        {
+            throw new ArgumentException($"Invalid URL scheme: {parsedUri.Scheme}. Only 'http' and 'https' are supported.", nameof(url));
         }
 
         ProcessStartInfo processStartInfo;
