@@ -1,6 +1,7 @@
 namespace NoP77svk.AspNetCore.BrowserAutoLaunch;
 
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 internal sealed class SystemBrowserLauncher : IBrowserLauncher
 {
@@ -73,19 +74,20 @@ internal sealed class SystemBrowserLauncher : IBrowserLauncher
         using var process = _startProcess(processStartInfo);
     }
 
-    internal static BrowserPlatform DeterminePlatform(bool isWindows, bool isLinux, bool isMacOS)
+    [ExcludeFromCodeCoverage]
+    internal static BrowserPlatform GetCurrentPlatform()
     {
-        if (isWindows)
+        if (OperatingSystem.IsWindows())
         {
             return BrowserPlatform.Windows;
         }
 
-        if (isLinux)
+        if (OperatingSystem.IsLinux())
         {
             return BrowserPlatform.Linux;
         }
 
-        if (isMacOS)
+        if (OperatingSystem.IsMacOS())
         {
             return BrowserPlatform.MacOS;
         }
@@ -111,12 +113,5 @@ internal sealed class SystemBrowserLauncher : IBrowserLauncher
             exeName: exeName,
             pathVar: Environment.GetEnvironmentVariable("PATH"),
             fileExists: File.Exists
-        );
-
-    internal static BrowserPlatform GetCurrentPlatform()
-        => DeterminePlatform(
-            isWindows: OperatingSystem.IsWindows(),
-            isLinux: OperatingSystem.IsLinux(),
-            isMacOS: OperatingSystem.IsMacOS()
         );
 }

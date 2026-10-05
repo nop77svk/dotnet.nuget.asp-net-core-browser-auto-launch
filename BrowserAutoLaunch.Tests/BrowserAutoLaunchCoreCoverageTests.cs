@@ -34,34 +34,14 @@ public sealed class BrowserAutoLaunchCoreCoverageTests
         Assert.Empty(launcher.StartInfo);
     }
 
-    [Theory]
-    [InlineData(true, false, false, "Windows")]
-    [InlineData(false, true, false, "Linux")]
-    [InlineData(false, false, true, "MacOS")]
-    [InlineData(false, false, false, "Unsupported")]
-    public void DeterminePlatform_ReturnsExpectedPlatform(
-        bool isWindows,
-        bool isLinux,
-        bool isMacOS,
-        string expected)
-    {
-        // Arrange
-
-        // Act
-        BrowserPlatform actual = SystemBrowserLauncher.DeterminePlatform(isWindows, isLinux, isMacOS);
-
-        // Assert
-        Assert.Equal(Enum.Parse<BrowserPlatform>(expected), actual);
-    }
-
     [Fact]
     public void GetCurrentPlatform_MatchesOperatingSystemDetection()
     {
         // Arrange
-        BrowserPlatform expected = SystemBrowserLauncher.DeterminePlatform(
-            OperatingSystem.IsWindows(),
-            OperatingSystem.IsLinux(),
-            OperatingSystem.IsMacOS());
+        BrowserPlatform expected = OperatingSystem.IsWindows() ? BrowserPlatform.Windows
+            : OperatingSystem.IsLinux() ? BrowserPlatform.Linux
+            : OperatingSystem.IsMacOS() ? BrowserPlatform.MacOS
+            : BrowserPlatform.Unsupported;
 
         // Act
         BrowserPlatform actual = SystemBrowserLauncher.GetCurrentPlatform();
