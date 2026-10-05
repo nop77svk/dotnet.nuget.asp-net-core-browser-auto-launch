@@ -1,25 +1,24 @@
 namespace NoP77svk.AspNetCore.BrowserAutoLaunch;
 
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 
 internal sealed class SystemBrowserLauncher : IBrowserLauncher
 {
-    private readonly Func<BrowserPlatform> _getPlatform;
+    private readonly IOsPlatformResolver _osPlatformResolver;
     private readonly Func<string, string?> _findOnPath;
     private readonly Func<ProcessStartInfo, Process?> _startProcess;
 
     public SystemBrowserLauncher()
-        : this(GetCurrentPlatform, FindOnPath, Process.Start)
+        : this(new DotNetOsPlatformResolver(), FindOnPath, Process.Start)
     {
     }
 
     internal SystemBrowserLauncher(
-        Func<BrowserPlatform> getPlatform,
+        IOsPlatformResolver osPlatformResolver,
         Func<string, string?> findOnPath,
         Func<ProcessStartInfo, Process?> startProcess)
     {
-        _getPlatform = getPlatform;
+        _osPlatformResolver = osPlatformResolver;
         _findOnPath = findOnPath;
         _startProcess = startProcess;
     }
@@ -36,63 +35,29 @@ internal sealed class SystemBrowserLauncher : IBrowserLauncher
             throw new ArgumentException($"Invalid URL scheme: {parsedUri.Scheme}. Only 'http' and 'https' are supported.", nameof(url));
         }
 
-        ProcessStartInfo processStartInfo;
-        BrowserPlatform platform = _getPlatform();
-
-        if (platform == BrowserPlatform.Windows)
+        BrowserPlatform platform = _osPlatformResolver.GetCurrentPlatform();
+        ProcessStartInfo processStartInfo = platform switch
         {
-            processStartInfo = new ProcessStartInfo(parsedUri.AbsoluteUri)
+            BrowserPlatform.Windows => new ProcessStartInfo(parsedUri.AbsoluteUri)
             {
                 UseShellExecute = true
-            };
-        }
-        else if (platform == BrowserPlatform.Linux)
-        {
-            var xdgOpenPath = _findOnPath("xdg-open") ?? "/usr/bin/xdg-open";
-            processStartInfo = new ProcessStartInfo
+            },
+            BrowserPlatform.Linux => new ProcessStartInfo
             {
-                FileName = xdgOpenPath,
+                FileName = _findOnPath("xdg-open") ?? "/usr/bin/xdg-open",
                 Arguments = parsedUri.AbsoluteUri,
                 UseShellExecute = false
-            };
-        }
-        else if (platform == BrowserPlatform.MacOS)
-        {
-            var openPath = _findOnPath("open") ?? "/usr/bin/open";
-            processStartInfo = new ProcessStartInfo
+            },
+            BrowserPlatform.MacOS => new ProcessStartInfo
             {
-                FileName = openPath,
+                FileName = _findOnPath("open") ?? "/usr/bin/open",
                 Arguments = parsedUri.AbsoluteUri,
                 UseShellExecute = false
-            };
-        }
-        else
-        {
-            throw new PlatformNotSupportedException($"Don't know how to open a web browser on {Environment.OSVersion}");
-        }
+            },
+            _ => throw new PlatformNotSupportedException($"Don't know how to open a web browser on {Environment.OSVersion}")
+        };
 
         using var process = _startProcess(processStartInfo);
-    }
-
-    [ExcludeFromCodeCoverage]
-    internal static BrowserPlatform GetCurrentPlatform()
-    {
-        if (OperatingSystem.IsWindows())
-        {
-            return BrowserPlatform.Windows;
-        }
-
-        if (OperatingSystem.IsLinux())
-        {
-            return BrowserPlatform.Linux;
-        }
-
-        if (OperatingSystem.IsMacOS())
-        {
-            return BrowserPlatform.MacOS;
-        }
-
-        return BrowserPlatform.Unsupported;
     }
 
     internal static string? FindOnPath(string exeName, string? pathVar, Func<string, bool> fileExists)
