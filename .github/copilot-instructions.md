@@ -17,6 +17,7 @@
 - Each test method contains one-line comments separating "arrange," "act," and "assert" phases, if they exist.
 - Exempt test projects from code coverage enforcement by [ExcludeFromCodeCoverage] on assembly level.
 - Tests must cover edge cases, too.
+- You may freely add tests. Updates and deletions of existing tests must be approved by me.
 
 ## CI/CI Guidelines
 - Everything in CI must be either for bash or for PowerShell Core. Use whichever results in shorter code.
