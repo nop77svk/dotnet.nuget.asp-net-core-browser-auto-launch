@@ -128,12 +128,7 @@ public sealed class BrowserAutoLaunchCoreCoverageTests
         // Arrange
         const string url = "http://localhost:5000";
         BrowserPlatform platform = Enum.Parse<BrowserPlatform>(platformName);
-        IOsPlatformResolver nonWindowsPlatformResolver = new MockOsPlatformResolver
-        {
-            IsWindows = () => false,
-            IsLinux = () => platform == BrowserPlatform.Linux,
-            IsMacOS = () => platform == BrowserPlatform.MacOS
-        };
+        IOsPlatformResolver nonWindowsPlatformResolver = new MockOsPlatformResolver(platform);
 
         ProcessStartInfo? capturedStartInfo = null;
         var launcher = new SystemBrowserLauncher(
@@ -161,10 +156,7 @@ public sealed class BrowserAutoLaunchCoreCoverageTests
         // Arrange
         const string url = "http://localhost:5000";
         ProcessStartInfo? capturedStartInfo = null;
-        IOsPlatformResolver windowsPlatformResolver = new MockOsPlatformResolver
-        {
-            IsWindows = () => true
-        };
+        IOsPlatformResolver windowsPlatformResolver = new MockOsPlatformResolver(BrowserPlatform.Windows);
 
         var launcher = new SystemBrowserLauncher(
             windowsPlatformResolver,
@@ -191,10 +183,7 @@ public sealed class BrowserAutoLaunchCoreCoverageTests
     public void Open_ThrowsForInvalidUrlsWithoutStartingProcess(string url)
     {
         // Arrange
-        IOsPlatformResolver linuxPlatformResolver = new MockOsPlatformResolver
-        {
-            IsLinux = () => true,
-        };
+        IOsPlatformResolver linuxPlatformResolver = new MockOsPlatformResolver(BrowserPlatform.Linux);
 
         bool processStarted = false;
         var launcher = new SystemBrowserLauncher(
@@ -221,10 +210,7 @@ public sealed class BrowserAutoLaunchCoreCoverageTests
     public void Open_ThrowsForNonHttpSchemesWithoutStartingProcess(string url)
     {
         // Arrange
-        IOsPlatformResolver windowsPlatformResolver = new MockOsPlatformResolver
-        {
-            IsWindows = () => true,
-        };
+        IOsPlatformResolver windowsPlatformResolver = new MockOsPlatformResolver(BrowserPlatform.Windows);
 
         bool processStarted = false;
         var launcher = new SystemBrowserLauncher(
