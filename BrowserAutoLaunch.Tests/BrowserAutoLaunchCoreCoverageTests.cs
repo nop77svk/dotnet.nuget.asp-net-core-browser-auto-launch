@@ -53,6 +53,86 @@ public sealed class BrowserAutoLaunchCoreCoverageTests
         Assert.Equal(expected, actual);
     }
 
+    [Fact]
+    public void GetCurrentPlatform_ForcedLinuxReturnsLinux()
+    {
+        // Arrange
+        BrowserPlatform expected = BrowserPlatform.Linux;
+
+        IOsPlatformResolver platformResolver = new DotNetOsPlatformResolver()
+        {
+            IsWindows = () => false,
+            IsLinux = () => true,
+            IsMacOS = () => false
+        };
+
+        // Act
+        BrowserPlatform actual = platformResolver.GetCurrentPlatform();
+
+        // Assert
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void GetCurrentPlatform_ForcedWindowsReturnsWindows()
+    {
+        // Arrange
+        BrowserPlatform expected = BrowserPlatform.Windows;
+
+        IOsPlatformResolver platformResolver = new DotNetOsPlatformResolver()
+        {
+            IsWindows = () => true,
+            IsLinux = () => false,
+            IsMacOS = () => false
+        };
+
+        // Act
+        BrowserPlatform actual = platformResolver.GetCurrentPlatform();
+
+        // Assert
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void GetCurrentPlatform_ForcedMacOsReturnsMacOs()
+    {
+        // Arrange
+        BrowserPlatform expected = BrowserPlatform.MacOS;
+
+        IOsPlatformResolver platformResolver = new DotNetOsPlatformResolver()
+        {
+            IsWindows = () => false,
+            IsLinux = () => false,
+            IsMacOS = () => true
+        };
+
+        // Act
+        BrowserPlatform actual = platformResolver.GetCurrentPlatform();
+
+        // Assert
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void GetCurrentPlatform_ForcedUnsupportedReturnsUnsupported()
+    {
+        // Arrange
+        BrowserPlatform expected = BrowserPlatform.Unsupported;
+
+        IOsPlatformResolver platformResolver = new DotNetOsPlatformResolver()
+        {
+            IsWindows = () => false,
+            IsLinux = () => false,
+            IsMacOS = () => false
+        };
+
+        // Act
+        BrowserPlatform actual = platformResolver.GetCurrentPlatform();
+
+        // Assert
+        Assert.Equal(expected, actual);
+    }
+
     [Theory]
     [InlineData(null)]
     [InlineData("")]
