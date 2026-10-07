@@ -1,7 +1,6 @@
 namespace NoP77svk.AspNetCore.BrowserAutoLaunch.Tests;
 
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Builder;
 using Xunit;
 
