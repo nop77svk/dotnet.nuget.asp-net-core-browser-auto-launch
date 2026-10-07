@@ -26,7 +26,7 @@ public sealed class BrowserAutoLaunchCoreCoverageTests
         // Arrange
         using var app = WebApplication.CreateBuilder().Build();
         var launcher = new RecordingBrowserLauncher();
-        var service = new BrowserAutoLaunchService(app, null, launcher);
+        var service = new BrowserAutoLaunchService(application: app, logger: null, browserLauncher: launcher);
 
         // Act
         service.LaunchTheBrowserFromApplication();
