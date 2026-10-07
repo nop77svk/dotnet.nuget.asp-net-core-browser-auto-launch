@@ -1,7 +1,6 @@
 namespace NoP77svk.AspNetCore.BrowserAutoLaunch.Tests;
 
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Builder;
 using Xunit;
 
@@ -26,7 +25,7 @@ public sealed class BrowserAutoLaunchCoreCoverageTests
         // Arrange
         using var app = WebApplication.CreateBuilder().Build();
         var launcher = new RecordingBrowserLauncher();
-        var service = new BrowserAutoLaunchService(app, null, launcher);
+        var service = new BrowserAutoLaunchService(application: app, logger: null, browserLauncher: launcher);
 
         // Act
         service.LaunchTheBrowserFromApplication();
@@ -45,6 +44,86 @@ public sealed class BrowserAutoLaunchCoreCoverageTests
             : BrowserPlatform.Unsupported;
 
         IOsPlatformResolver platformResolver = new DotNetOsPlatformResolver();
+
+        // Act
+        BrowserPlatform actual = platformResolver.GetCurrentPlatform();
+
+        // Assert
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void GetCurrentPlatform_ForcedLinuxReturnsLinux()
+    {
+        // Arrange
+        BrowserPlatform expected = BrowserPlatform.Linux;
+
+        IOsPlatformResolver platformResolver = new DotNetOsPlatformResolver()
+        {
+            IsWindows = () => false,
+            IsLinux = () => true,
+            IsMacOS = () => false
+        };
+
+        // Act
+        BrowserPlatform actual = platformResolver.GetCurrentPlatform();
+
+        // Assert
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void GetCurrentPlatform_ForcedWindowsReturnsWindows()
+    {
+        // Arrange
+        BrowserPlatform expected = BrowserPlatform.Windows;
+
+        IOsPlatformResolver platformResolver = new DotNetOsPlatformResolver()
+        {
+            IsWindows = () => true,
+            IsLinux = () => false,
+            IsMacOS = () => false
+        };
+
+        // Act
+        BrowserPlatform actual = platformResolver.GetCurrentPlatform();
+
+        // Assert
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void GetCurrentPlatform_ForcedMacOsReturnsMacOs()
+    {
+        // Arrange
+        BrowserPlatform expected = BrowserPlatform.MacOS;
+
+        IOsPlatformResolver platformResolver = new DotNetOsPlatformResolver()
+        {
+            IsWindows = () => false,
+            IsLinux = () => false,
+            IsMacOS = () => true
+        };
+
+        // Act
+        BrowserPlatform actual = platformResolver.GetCurrentPlatform();
+
+        // Assert
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void GetCurrentPlatform_ForcedUnsupportedReturnsUnsupported()
+    {
+        // Arrange
+        BrowserPlatform expected = BrowserPlatform.Unsupported;
+
+        IOsPlatformResolver platformResolver = new DotNetOsPlatformResolver()
+        {
+            IsWindows = () => false,
+            IsLinux = () => false,
+            IsMacOS = () => false
+        };
 
         // Act
         BrowserPlatform actual = platformResolver.GetCurrentPlatform();
@@ -128,12 +207,7 @@ public sealed class BrowserAutoLaunchCoreCoverageTests
         // Arrange
         const string url = "http://localhost:5000";
         BrowserPlatform platform = Enum.Parse<BrowserPlatform>(platformName);
-        IOsPlatformResolver nonWindowsPlatformResolver = new MockOsPlatformResolver
-        {
-            IsWindows = () => false,
-            IsLinux = () => platform == BrowserPlatform.Linux,
-            IsMacOS = () => platform == BrowserPlatform.MacOS
-        };
+        IOsPlatformResolver nonWindowsPlatformResolver = new MockOsPlatformResolver(platform);
 
         ProcessStartInfo? capturedStartInfo = null;
         var launcher = new SystemBrowserLauncher(
@@ -161,10 +235,7 @@ public sealed class BrowserAutoLaunchCoreCoverageTests
         // Arrange
         const string url = "http://localhost:5000";
         ProcessStartInfo? capturedStartInfo = null;
-        IOsPlatformResolver windowsPlatformResolver = new MockOsPlatformResolver
-        {
-            IsWindows = () => true
-        };
+        IOsPlatformResolver windowsPlatformResolver = new MockOsPlatformResolver(BrowserPlatform.Windows);
 
         var launcher = new SystemBrowserLauncher(
             windowsPlatformResolver,
@@ -191,10 +262,7 @@ public sealed class BrowserAutoLaunchCoreCoverageTests
     public void Open_ThrowsForInvalidUrlsWithoutStartingProcess(string url)
     {
         // Arrange
-        IOsPlatformResolver linuxPlatformResolver = new MockOsPlatformResolver
-        {
-            IsLinux = () => true,
-        };
+        IOsPlatformResolver linuxPlatformResolver = new MockOsPlatformResolver(BrowserPlatform.Linux);
 
         bool processStarted = false;
         var launcher = new SystemBrowserLauncher(
@@ -221,10 +289,7 @@ public sealed class BrowserAutoLaunchCoreCoverageTests
     public void Open_ThrowsForNonHttpSchemesWithoutStartingProcess(string url)
     {
         // Arrange
-        IOsPlatformResolver windowsPlatformResolver = new MockOsPlatformResolver
-        {
-            IsWindows = () => true,
-        };
+        IOsPlatformResolver windowsPlatformResolver = new MockOsPlatformResolver(BrowserPlatform.Windows);
 
         bool processStarted = false;
         var launcher = new SystemBrowserLauncher(

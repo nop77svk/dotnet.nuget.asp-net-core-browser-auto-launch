@@ -2,11 +2,15 @@ namespace NoP77svk.AspNetCore.BrowserAutoLaunch;
 
 internal sealed class MockOsPlatformResolver : IOsPlatformResolver
 {
-    public Func<bool> IsWindows { get; init; } = () => false;
-    public Func<bool> IsLinux { get; init; } = () => false;
-    public Func<bool> IsMacOS { get; init; } = () => false;
+    private readonly BrowserPlatform _browserPlatform;
 
-    public MockOsPlatformResolver()
+    public MockOsPlatformResolver(BrowserPlatform browserPlatform = BrowserPlatform.Unsupported)
     {
+        _browserPlatform = browserPlatform;
+    }
+
+    public BrowserPlatform GetCurrentPlatform()
+    {
+        return _browserPlatform;
     }
 }
